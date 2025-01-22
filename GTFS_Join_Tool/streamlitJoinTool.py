@@ -22,7 +22,7 @@ def reset_session_state():
 
 
 def main():
-    st.title("Data Merge and Plot Tool")
+    st.title("GTFS Merge and Plot Tool")
 
     # Reset button
     if st.button("Reset All"):

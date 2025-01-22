@@ -4,7 +4,8 @@
 /smart_sign_app/node_modules
 /smart_sign_app/.pnp
 /smart_sign_app.pnp.js
-
+/gtfs_download/dist
+/gtfs_download/build
 # testing
 /smart_sign_app/coverage
 
