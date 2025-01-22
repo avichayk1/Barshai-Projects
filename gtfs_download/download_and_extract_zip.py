@@ -33,9 +33,9 @@ def download_and_extract_zip(url,new_gtfs_directory):
                     href_display = format_path(href.replace('/', '\\'))
 
                     print(f'Successfully extracted {href_display} to {extraction_directory_display}')
-                    logging.error(f'Successfully extracted {href_display} to {extraction_directory_display}')
+                    # logging.error(f'Successfully extracted {href_display} to {extraction_directory_display}')
                 else:
                     logging.error(f'Failed to retrieve data from {zip_url}')
-                    print(f'Failed to retrieve data from {zip_url}')
+                    # print(f'Failed to retrieve data from {zip_url}')
     else:
         print(f'Failed to retrieve data from {url}')
