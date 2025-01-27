@@ -124,18 +124,6 @@ def main():
             st.session_state["merged_data"].to_csv(save_path, index=False)
             st.success(f"Merged data saved to {save_path}")
 
-    # Plotting options
-    st.header("Plot Data")
-    if st.session_state["merged_data"] is not None:
-        numeric_columns = st.session_state["merged_data"].select_dtypes(include=['number']).columns
-        if len(numeric_columns) == 0:
-            st.warning("No numeric columns available for plotting.")
-        else:
-            x_axis = st.selectbox("Select X-axis column:", numeric_columns)
-            y_axis = st.selectbox("Select Y-axis column:", numeric_columns)
-
-            if st.button("Generate Plot"):
-                st.line_chart(st.session_state["merged_data"][[x_axis, y_axis]])
 
 
 if __name__ == "__main__":
