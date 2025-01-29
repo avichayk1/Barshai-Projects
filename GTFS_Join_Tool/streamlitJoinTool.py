@@ -45,6 +45,7 @@ def apply_filters(data):
 
 
 def main():
+    st.set_page_config(layout="wide")
     # Initialize 'filters' key if it doesn't exist
     if "filters" not in st.session_state:
         st.session_state["filters"] = []
