@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import streamlit as st
+import time
 
 
 def get_columns_from_txt(file_content):
@@ -51,6 +52,7 @@ def main():
     # Dictionary to store file name and its content as a pair
     if "file_data" not in st.session_state:
         st.session_state["file_data"] = {}
+    time.sleep(2)  # Sleep for 2 seconds
 
     if uploaded_files:
         for uploaded_file in uploaded_files:
