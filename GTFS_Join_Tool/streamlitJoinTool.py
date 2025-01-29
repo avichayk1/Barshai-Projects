@@ -49,6 +49,7 @@ def process_file(uploaded_file):
     chunks = []
 
     for chunk in pd.read_csv(uploaded_file, chunksize=chunk_size):
+        time.sleep(2)  # Sleep for 2 seconds
         chunks.append(chunk)
 
     return pd.concat(chunks, ignore_index=True)
@@ -65,7 +66,7 @@ def main():
         for uploaded_file in uploaded_files:
             st.write(f"Processing {uploaded_file.name}...")
             df = process_file(uploaded_file)
-            time.sleep(2)  # Sleep for 2 seconds
+            # time.sleep(2)  # Sleep for 2 seconds
 
             # st.write(f"Loaded {len(df)} rows.")
             st.session_state["file_data"][uploaded_file.name] = df
