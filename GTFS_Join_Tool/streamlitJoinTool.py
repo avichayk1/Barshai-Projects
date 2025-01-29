@@ -44,6 +44,14 @@ def apply_filters(data):
     return data
 
 
+def process_file(uploaded_file):
+    chunk_size = 10 ** 6  # Read in 1MB chunks
+    chunks = []
+
+    for chunk in pd.read_csv(uploaded_file, chunksize=chunk_size):
+        chunks.append(chunk)
+
+    return pd.concat(chunks, ignore_index=True)
 def main():
     st.set_page_config(layout="wide")
 
@@ -56,10 +64,10 @@ def main():
 
     if uploaded_files:
         for uploaded_file in uploaded_files:
-            if uploaded_file.name not in st.session_state["file_data"]:
-                # Read the file content into a DataFrame and store it in session state
-                file_content = pd.read_csv(uploaded_file)
-                st.session_state["file_data"][uploaded_file.name] = file_content
+            st.write(f"Processing {uploaded_file.name}...")
+            df = process_file(uploaded_file)
+            # st.write(f"Loaded {len(df)} rows.")
+            st.session_state["file_data"][uploaded_file.name] = df
 
     # Initialize 'filters' key if it doesn't exist
     if "filters" not in st.session_state:
