@@ -60,12 +60,13 @@ def main():
     # Dictionary to store file name and its content as a pair
     if "file_data" not in st.session_state:
         st.session_state["file_data"] = {}
-    time.sleep(2)  # Sleep for 2 seconds
 
     if uploaded_files:
         for uploaded_file in uploaded_files:
             st.write(f"Processing {uploaded_file.name}...")
             df = process_file(uploaded_file)
+            time.sleep(2)  # Sleep for 2 seconds
+
             # st.write(f"Loaded {len(df)} rows.")
             st.session_state["file_data"][uploaded_file.name] = df
 
