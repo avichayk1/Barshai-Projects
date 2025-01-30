@@ -186,12 +186,12 @@ def main():
         limited_data = filtered_data.head(200)
         st.dataframe(limited_data)
 
-    # Enter the save path before pressing the save button
-    if st.session_state["merged_data"] is not None:
-        save_path = st.text_input("Enter the save path (with .csv extension):")
-        if save_path and st.button("Save Merged Data"):
-            st.session_state["merged_data"].to_csv(save_path, index=False)
-            st.success(f"Merged data saved to {save_path}")
+    # # Enter the save path before pressing the save button
+    # if st.session_state["merged_data"] is not None:
+    #     save_path = st.text_input("Enter the save path (with .csv extension):")
+    #     if save_path and st.button("Save Merged Data"):
+    #         st.session_state["merged_data"].to_csv(save_path, index=False)
+    #         st.success(f"Merged data saved to {save_path}")
 
 
 if __name__ == "__main__":
