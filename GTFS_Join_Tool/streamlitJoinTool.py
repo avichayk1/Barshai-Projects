@@ -52,12 +52,17 @@ def main():
     # Dictionary to store file name and its content as a pair
     if "file_data" not in st.session_state:
         st.session_state["file_data"] = {}
+    chunk_size = 100000  # Adjust as needed
 
     if uploaded_files:
         for uploaded_file in uploaded_files:
             if uploaded_file.name not in st.session_state["file_data"]:
                 # Read the file content into a DataFrame and store it in session state
-                file_content = pd.read_csv(uploaded_file)
+                chunks = pd.read_csv(uploaded_file, chunksize=chunk_size)
+
+                # Combine chunks into a full DataFrame
+                file_content = pd.concat(chunks, ignore_index=True)
+                # file_content = pd.read_csv(uploaded_file)
                 st.session_state["file_data"][uploaded_file.name] = file_content
 
     # Initialize 'filters' key if it doesn't exist
