@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import streamlit as st
 import time
-import concurrent.futures
 
 
 def get_columns_from_txt(file_content):
@@ -44,31 +43,23 @@ def apply_filters(data):
         data[column] = data[column].astype(dtype)
     return data
 
-def read_file(uploaded_file):
-    # Read the file content into a DataFrame
-    file_content = pd.read_csv(uploaded_file)
-    return file_content
+
 def main():
     st.set_page_config(layout="wide")
 
     uploaded_files = st.file_uploader("Upload TXT files", accept_multiple_files=True, type="txt")
 
-    if uploaded_files:
-        # Create a ThreadPoolExecutor to handle multiple file reads
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            # Submit tasks for reading each file
-            future_to_file = {executor.submit(read_file, uploaded_file): uploaded_file for uploaded_file in uploaded_files}
+    # Dictionary to store file name and its content as a pair
+    if "file_data" not in st.session_state:
+        st.session_state["file_data"] = {}
 
-            # Wait for the results and store them
-            file_data = {}
-            for future in concurrent.futures.as_completed(future_to_file):
-                uploaded_file = future_to_file[future]
-                try:
-                    file_content = future.result()
-                    file_data[uploaded_file.name] = file_content
-                    st.success(f"File '{uploaded_file.name}' successfully loaded.")
-                except Exception as e:
-                    st.error(f"Error loading file '{uploaded_file.name}': {e}")
+    if uploaded_files:
+        for uploaded_file in uploaded_files:
+            if uploaded_file.name not in st.session_state["file_data"]:
+                # Read the file content into a DataFrame and store it in session state
+                file_content = pd.read_csv(uploaded_file)
+                st.session_state["file_data"][uploaded_file.name] = file_content
+                st.success(f"File '{uploaded_file.name}' successfully loaded.")
     # Initialize 'filters' key if it doesn't exist
     if "filters" not in st.session_state:
         st.session_state["filters"] = []
