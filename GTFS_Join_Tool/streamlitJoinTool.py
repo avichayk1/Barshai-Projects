@@ -59,7 +59,7 @@ def main():
                 # Read the file content into a DataFrame and store it in session state
                 file_content = pd.read_csv(uploaded_file)
                 st.session_state["file_data"][uploaded_file.name] = file_content
-
+                st.success(f"File '{uploaded_file.name}' successfully loaded.")
     # Initialize 'filters' key if it doesn't exist
     if "filters" not in st.session_state:
         st.session_state["filters"] = []
