@@ -4,18 +4,21 @@ import streamlit as st
 import time
 
 
-def load_file_in_chunks(uploaded_file, chunk_size=1500000):
+def load_file_in_chunks(uploaded_file, chunk_size=1500000, sleep_duration=1):
     # Initialize an empty list to store the chunks
     chunks = []
 
     # Read the file in chunks
     for chunk in pd.read_csv(uploaded_file, chunksize=chunk_size):
         chunks.append(chunk)
+        time.sleep(sleep_duration)  # Add a sleep duration between processing chunks
 
     # Combine all chunks into a single DataFrame
     file_content = pd.concat(chunks, ignore_index=True)
 
     return file_content
+
+
 def get_columns_from_txt(file_content):
     first_line = file_content.readline().strip()
     return first_line.split(',')  # Return columns
@@ -51,6 +54,7 @@ def apply_filters(data):
             data = data[data[column] == value]
         elif comparison == "Does Not Match":
             data = data[data[column] != value]
+
     for column, dtype in original_types.items():
         data[column] = data[column].astype(dtype)
     return data
@@ -64,7 +68,6 @@ def main():
     # Dictionary to store file name and its content as a pair
     if "file_data" not in st.session_state:
         st.session_state["file_data"] = {}
-
 
     if "filters" not in st.session_state:
         st.session_state["filters"] = []
@@ -90,22 +93,20 @@ def main():
     # File selection
     selected_file = st.selectbox("Select a file to merge:", file_names)
     if selected_file:
-        # uploaded_file = st.session_state["file_data"][selected_file]
         uploaded_file = next((file for file in uploaded_files if file.name == selected_file), None)
 
         if uploaded_file.name not in st.session_state["file_data"]:
-            with st.spinner(f"Loading file '{uploaded_file.name}' in chunks..."):
-                # Load file content in chunks and concatenate them
-                file_content = load_file_in_chunks(uploaded_file)
+            # Load file content in chunks and concatenate them
+            file_content = load_file_in_chunks(uploaded_file)
 
-                # Store the loaded data in session state
-                st.session_state["file_data"][uploaded_file.name] = file_content
-                st.success(f"File '{uploaded_file.name}' successfully loaded in chunks.")
+            # Store the loaded data in session state
+            st.session_state["file_data"][uploaded_file.name] = file_content
+            st.success(f"File '{uploaded_file.name}' successfully loaded in chunks.")
         else:
-        # Get the file content for the selected file
+            # Get the file content for the selected file
             file_content = st.session_state["file_data"][selected_file]
-        columns = file_content.columns.tolist()  # Use the DataFrame columns
 
+        columns = file_content.columns.tolist()  # Use the DataFrame columns
         selected_columns = st.multiselect("Select columns to include from the file:", columns, default=columns)
 
         if st.session_state["merged_data"] is not None:
@@ -122,10 +123,6 @@ def main():
             if st.session_state["merged_data"] is None:
                 # First file: initialize merged_data when it's the first upload after reset
                 st.session_state["merged_data"] = file_content
-                # # Ensure consistent type for the join column (set this to the join column you expect to merge on)
-                # join_column = "agency_id"  # Replace with your actual join column name
-                # st.session_state["merged_data"][join_column] = st.session_state["merged_data"][join_column].astype(
-                #     str)  # or int64, based on the column's type
                 st.success(f"File '{selected_file}' loaded as the base for merging.")
             else:
                 # If merged_data exists, merge with the new file
@@ -187,13 +184,13 @@ def main():
             else:
                 st.warning("Please enter a valid value to filter.")
 
-
         st.sidebar.header("Active Filters")
         if st.session_state["filters"]:
             for idx, f in enumerate(st.session_state["filters"], start=1):
                 st.sidebar.write(f"{idx}. {f['column']} {f['comparison']} '{f['value']}'")
         else:
             st.sidebar.text("No active filters")
+
     # Apply filters to merged data
     if st.session_state["merged_data"] is not None:
         filtered_data = apply_filters(st.session_state["merged_data"])
