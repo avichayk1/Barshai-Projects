@@ -4,6 +4,18 @@ import streamlit as st
 import time
 
 
+def load_file_in_chunks(uploaded_file, chunk_size=500000):
+    # Initialize an empty list to store the chunks
+    chunks = []
+
+    # Read the file in chunks
+    for chunk in pd.read_csv(uploaded_file, chunksize=chunk_size):
+        chunks.append(chunk)
+
+    # Combine all chunks into a single DataFrame
+    file_content = pd.concat(chunks, ignore_index=True)
+
+    return file_content
 def get_columns_from_txt(file_content):
     first_line = file_content.readline().strip()
     return first_line.split(',')  # Return columns
@@ -82,9 +94,13 @@ def main():
         uploaded_file = next((file for file in uploaded_files if file.name == selected_file), None)
 
         if uploaded_file.name not in st.session_state["file_data"]:
-            file_content = pd.read_csv(uploaded_file)  # Moved read_csv here
-            st.session_state["file_data"][uploaded_file.name] = file_content
-            st.success(f"File '{uploaded_file.name}' successfully loaded.")
+            with st.spinner(f"Loading file '{uploaded_file.name}' in chunks..."):
+                # Load file content in chunks and concatenate them
+                file_content = load_file_in_chunks(uploaded_file)
+
+                # Store the loaded data in session state
+                st.session_state["file_data"][uploaded_file.name] = file_content
+                st.success(f"File '{uploaded_file.name}' successfully loaded in chunks.")
         else:
         # Get the file content for the selected file
             file_content = st.session_state["file_data"][selected_file]
