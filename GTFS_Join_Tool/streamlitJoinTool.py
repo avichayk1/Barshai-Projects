@@ -198,6 +198,5 @@ def main():
         limited_data = filtered_data.head(200)
         st.dataframe(limited_data)
 
-
 if __name__ == "__main__":
     main()
