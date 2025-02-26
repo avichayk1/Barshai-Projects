@@ -4,7 +4,7 @@ import streamlit as st
 import time
 
 
-def load_file_in_chunks(uploaded_file, chunk_size=500000):
+def load_file_in_chunks(uploaded_file, chunk_size=1500000):
     # Initialize an empty list to store the chunks
     chunks = []
 
