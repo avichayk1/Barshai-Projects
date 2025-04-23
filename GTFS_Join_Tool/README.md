@@ -1,6 +1,6 @@
-# GTFS Merge and Plot Tool
+# Join Tool
 
-This tool is designed for merging and plotting data from multiple GTFS `.txt` files. The user can upload files, select columns to include, merge them based on a common column, and visualize the data through plots.
+This tool is designed for merging and plotting data from multiple `.txt` files. The user can upload files, select columns to include, merge them based on a common column, and visualize the data through plots.
 <img src="GTFS Merge and Plot Tool.png" alt="Description" width="600"/>
 
 ## Features
